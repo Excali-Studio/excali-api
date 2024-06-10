@@ -72,6 +72,7 @@ export class CanvasController {
     return {
       id: canvas.id,
       name: canvas.name,
+      description: canvas.description,
       tags: canvas.tags,
       dateCreated: canvas.dateCreated,
       dateUpdated: canvas.dateUpdated,
@@ -115,6 +116,7 @@ export class CanvasController {
     return {
       id: canvas.id,
       name: canvas.name,
+      description: canvas.description,
       tags: canvas.tags,
       dateCreated: canvas.dateCreated,
       dateUpdated: canvas.dateUpdated,
@@ -168,6 +170,7 @@ export class CanvasController {
     return {
       id: canvas.id,
       name: canvas.name,
+      description: canvas.description,
       tags: canvas.tags,
       dateCreated: canvas.dateCreated,
       dateUpdated: canvas.dateUpdated,

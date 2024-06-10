@@ -17,6 +17,12 @@ export class CanvasEntity {
   @Column({ nullable: false })
   name: string;
 
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  description: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 

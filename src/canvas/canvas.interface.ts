@@ -17,6 +17,7 @@ import { Transform } from 'class-transformer';
 
 export interface CanvasCreateCommand {
   name: string;
+  description: string;
   userId: Uuid;
 }
 
@@ -30,6 +31,7 @@ export interface CanvasContentUpdateCommand {
 export interface CanvasMetadataUpdateCommand {
   id: Uuid;
   name: string;
+  description: string;
 }
 
 export interface GiveAccessCommand {
@@ -68,12 +70,16 @@ export class CanvasMetadataUpdateDTO {
   @MinLength(3)
   @MaxLength(255)
   name: string;
+  @MaxLength(4000)
+  description: string;
 }
 
 export class CanvasCreateDTO {
   @MinLength(3)
   @MaxLength(255)
   name: string;
+  @MaxLength(4000)
+  description: string;
 }
 
 export class CanvasContentUpdateDTO {
@@ -88,6 +94,7 @@ export interface CanvasDTO {
   dateCreated: Date;
   dateUpdated: Date;
   name: string;
+  description: string;
   tags: CanvasTagDTO[];
 }
 
@@ -129,7 +136,7 @@ export class CanvasFilter extends ListFilter {
   @Transform(({ value }) => (Array.isArray(value) ? value : Array(value)))
   tagIds?: Uuid[] = [];
   @ApiProperty({ required: false })
-  searchName?: string;
+  searchQuery?: string;
 }
 
 export class CanvasStateFilter {
