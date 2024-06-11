@@ -17,7 +17,7 @@ import { Transform } from 'class-transformer';
 
 export interface CanvasCreateCommand {
   name: string;
-  description: string;
+  description?: string;
   userId: Uuid;
 }
 
@@ -31,7 +31,7 @@ export interface CanvasContentUpdateCommand {
 export interface CanvasMetadataUpdateCommand {
   id: Uuid;
   name: string;
-  description: string;
+  description?: string;
 }
 
 export interface GiveAccessCommand {
@@ -70,16 +70,18 @@ export class CanvasMetadataUpdateDTO {
   @MinLength(3)
   @MaxLength(255)
   name: string;
+  @IsOptional()
   @MaxLength(4000)
-  description: string;
+  description?: string;
 }
 
 export class CanvasCreateDTO {
   @MinLength(3)
   @MaxLength(255)
   name: string;
+  @IsOptional()
   @MaxLength(4000)
-  description: string;
+  description?: string;
 }
 
 export class CanvasContentUpdateDTO {

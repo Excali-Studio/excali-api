@@ -50,7 +50,7 @@ export class CanvasService {
     });
     const canvas = new CanvasEntity();
     canvas.name = command.name.trim();
-    canvas.description = command.description.trim();
+    canvas.description = command.description?.trim();
     await this.canvasRepository.save(canvas);
     const canvasAccess = new CanvasAccessEntity();
     canvasAccess.isOwner = true;
@@ -96,7 +96,7 @@ export class CanvasService {
     }
 
     canvas.name = command.name.trim();
-    canvas.description = command.description.trim();
+    canvas.description = command.description?.trim();
     canvas.dateUpdated = new Date();
     await this.canvasRepository.save(canvas);
 
