@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { CanvasEntity } from './entity/canvas.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -50,6 +50,7 @@ export class CanvasService {
     });
     const canvas = new CanvasEntity();
     canvas.name = command.name.trim();
+    canvas.description = command.description?.trim();
     await this.canvasRepository.save(canvas);
     const canvasAccess = new CanvasAccessEntity();
     canvasAccess.isOwner = true;
@@ -95,6 +96,7 @@ export class CanvasService {
     }
 
     canvas.name = command.name.trim();
+    canvas.description = command.description?.trim();
     canvas.dateUpdated = new Date();
     await this.canvasRepository.save(canvas);
 
@@ -132,10 +134,16 @@ export class CanvasService {
         .setParameter(`tagId${index}`, tagId);
     });
 
-    if (canvasFilter.searchName) {
-      queryBuilder.andWhere('LOWER(canvas.name) like :searchName', {
-        searchName: `%${canvasFilter.searchName.toLowerCase()}%`,
-      });
+    if (canvasFilter.searchQuery) {
+      queryBuilder.andWhere(
+        new Brackets((qb) => {
+          qb.where('LOWER(canvas.name) like :searchQuery', {
+            searchQuery: `%${canvasFilter.searchQuery.toLowerCase()}%`,
+          }).orWhere('LOWER(canvas.description) like :searchQuery', {
+            searchQuery: `%${canvasFilter.searchQuery.toLowerCase()}%`,
+          });
+        }),
+      );
     }
 
     return PageableUtils.producePagedResult(
