@@ -13,6 +13,7 @@ import {
   PagedResult,
 } from '../common/pageable.utils';
 import { Uuid } from '../common/common.interface';
+import { randomColorGenerator } from '../helpers/random-color-generator';
 
 @Injectable()
 export class CanvasTagService {
@@ -34,7 +35,7 @@ export class CanvasTagService {
     const tag = new CanvasTagEntity();
     tag.name = tagName;
     tag.description = command.description?.trim();
-    tag.color = command.color?.trim();
+    tag.color = command.color?.trim() || randomColorGenerator().trim();
     await this.canvasTagRepository.save(tag);
     return tag;
   }
