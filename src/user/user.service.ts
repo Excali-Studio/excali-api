@@ -27,4 +27,8 @@ export class UserService {
 
     return user;
   }
+
+  public async getUsers(): Promise<UserEntity[]> {
+    return await this.userRepository.find();
+  }
 }

@@ -2,7 +2,7 @@ import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Request } from 'express';
 import { AuthenticatedGuard } from '../auth/guard/authenticated.guard';
-import { UserMeDTO } from './user.interface';
+import { User, UserMeDTO } from './user.interface';
 
 @Controller('user')
 export class UserController {
@@ -19,5 +19,15 @@ export class UserController {
       uid: user.id,
       roles: user.roles,
     };
+  }
+
+  @Get('users')
+  @UseGuards(AuthenticatedGuard)
+  public async readAllUsers(): Promise<Omit<User, 'displayName'>[]> {
+    const users = await this.userService.getUsers();
+    return users.map((elem) => ({
+      id: elem.id,
+      email: elem.email,
+    }));
   }
 }
