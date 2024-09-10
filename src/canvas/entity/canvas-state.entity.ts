@@ -12,12 +12,15 @@ import {
   Uuid,
 } from '../../common/common.interface';
 import { CanvasEntity } from './canvas.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('canvas_state')
 export class CanvasStateEntity {
+  @ApiProperty({ example: '2a204754-603d-47b5-a217-5622bf8432b1' })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @ApiProperty()
   @Column({
     type: 'jsonb',
     array: false,
@@ -26,6 +29,7 @@ export class CanvasStateEntity {
   })
   appState: CanvasAppState;
 
+  @ApiProperty()
   @Column({
     type: 'jsonb',
     array: false,
@@ -34,6 +38,7 @@ export class CanvasStateEntity {
   })
   elements: CanvasElements;
 
+  @ApiProperty()
   @Column({
     type: 'jsonb',
     array: false,
@@ -42,12 +47,15 @@ export class CanvasStateEntity {
   })
   files: CanvasFiles;
 
+  @ApiProperty()
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 
+  @ApiProperty()
   @ManyToOne(() => CanvasEntity, { nullable: false })
   canvas: CanvasEntity;
 
+  @ApiProperty({ example: '45018974-63b4-45b6-8c2b-823584fbcbbc' })
   @RelationId((canvasState: CanvasStateEntity) => canvasState.canvas)
   @Column()
   canvasId: Uuid;

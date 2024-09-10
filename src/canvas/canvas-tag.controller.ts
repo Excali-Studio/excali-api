@@ -17,7 +17,15 @@ import { ListFilter, PagedResult } from '../common/pageable.utils';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { UuidPipe } from '../common/uuid.pipe';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ApiPaginatedResponse } from '../helpers/swagger';
 
+@ApiTags('canvas-tag')
 @Controller('/canvas-tag')
 export class CanvasTagController {
   constructor(private readonly canvasTagService: CanvasTagService) {}
@@ -25,6 +33,9 @@ export class CanvasTagController {
   @Post()
   @Roles(['ADMIN'])
   @UseGuards(AuthenticatedGuard, RolesGuard)
+  @ApiOkResponse({
+    type: CanvasTagDTO,
+  })
   public async create(
     @Body() dto: CanvasTagCreateOrUpdateDTO,
   ): Promise<CanvasTagDTO> {
@@ -39,6 +50,9 @@ export class CanvasTagController {
 
   @Get('/:id')
   @UseGuards(AuthenticatedGuard)
+  @ApiOkResponse({
+    type: CanvasTagDTO,
+  })
   public async readById(
     @Param('id', UuidPipe) id: Uuid,
   ): Promise<CanvasTagDTO> {
@@ -47,6 +61,7 @@ export class CanvasTagController {
 
   @Get('/')
   @UseGuards(AuthenticatedGuard)
+  @ApiPaginatedResponse(CanvasTagDTO)
   public async readAll(
     @Query() filter: ListFilter,
   ): Promise<PagedResult<CanvasTagDTO>> {
@@ -56,6 +71,7 @@ export class CanvasTagController {
   @Put('/:id')
   @Roles(['ADMIN'])
   @UseGuards(AuthenticatedGuard, RolesGuard)
+  @ApiOkResponse({ type: CanvasTagDTO })
   public async update(
     @Param('id', UuidPipe) id: Uuid,
     @Body() dto: CanvasTagCreateOrUpdateDTO,
@@ -69,6 +85,7 @@ export class CanvasTagController {
   @Delete('/:id')
   @Roles(['ADMIN'])
   @UseGuards(AuthenticatedGuard, RolesGuard)
+  @ApiNoContentResponse()
   public async delete(@Param('id', UuidPipe) id: Uuid) {
     await this.canvasTagService.delete({ id });
   }
