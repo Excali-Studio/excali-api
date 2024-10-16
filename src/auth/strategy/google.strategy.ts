@@ -32,7 +32,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       profile.emails[0].value,
       profile.displayName,
     );
-
     return user || null;
   }
 }
