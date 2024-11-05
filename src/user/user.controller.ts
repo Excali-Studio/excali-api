@@ -18,6 +18,7 @@ export class UserController {
     return {
       uid: user.id,
       roles: user.roles,
+      displayName: user.displayName,
     };
   }
 

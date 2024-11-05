@@ -1,5 +1,6 @@
 export interface UserMeDTO {
   uid: string;
+  displayName: string;
   roles: UserRoleDTO[];
 }
 
