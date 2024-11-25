@@ -103,6 +103,10 @@ export class CanvasService {
     return canvas;
   }
 
+  public async deleteCanvasById(id: Uuid) {
+    await this.canvasRepository.delete({ id });
+  }
+
   public async readById(id: Uuid): Promise<CanvasEntity> {
     return this.canvasRepository.findOne({
       where: {
@@ -124,7 +128,7 @@ export class CanvasService {
     );
 
     queryBuilder
-      .innerJoin('canvas.canvasAccesses', 'access')
+      .innerJoinAndSelect('canvas.canvasAccesses', 'access')
       .where('access.userId = :userId', { userId: userId });
 
     canvasFilter.tagIds.forEach((tagId, index) => {
