@@ -45,7 +45,7 @@ export class CanvasStateEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateCreated: Date;
 
-  @ManyToOne(() => CanvasEntity, { nullable: false })
+  @ManyToOne(() => CanvasEntity, { nullable: false, onDelete: 'CASCADE' })
   canvas: CanvasEntity;
 
   @RelationId((canvasState: CanvasStateEntity) => canvasState.canvas)

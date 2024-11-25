@@ -7,7 +7,7 @@ export class CanvasAccessEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => CanvasEntity, { nullable: false })
+  @ManyToOne(() => CanvasEntity, { nullable: false, onDelete: 'CASCADE' })
   canvas: CanvasEntity;
 
   @ManyToOne(() => UserEntity, { nullable: false })
