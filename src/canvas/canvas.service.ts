@@ -105,10 +105,11 @@ export class CanvasService {
 
   public async deleteCanvasById(id: Uuid) {
     const canvas = await this.canvasRepository.findOne({
-      where: { id },
+      where: {
+        id,
+        deleted: false,
+      },
     });
-
-    if (!canvas) throw new NotFoundException();
 
     await this.canvasRepository.update({ id: canvas.id }, { deleted: true });
   }

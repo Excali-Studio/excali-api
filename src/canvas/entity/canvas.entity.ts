@@ -29,7 +29,7 @@ export class CanvasEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateUpdated: Date;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: false, nullable: false })
   deleted: boolean;
 
   @ManyToMany(() => CanvasTagEntity)
