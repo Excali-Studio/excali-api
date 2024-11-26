@@ -29,6 +29,9 @@ export class CanvasEntity {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   dateUpdated: Date;
 
+  @Column({ type: 'boolean', default: false })
+  deleted: boolean;
+
   @ManyToMany(() => CanvasTagEntity)
   @JoinTable({
     name: 'canvas_tags',

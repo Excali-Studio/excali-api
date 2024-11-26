@@ -104,13 +104,20 @@ export class CanvasService {
   }
 
   public async deleteCanvasById(id: Uuid) {
-    await this.canvasRepository.delete({ id });
+    const canvas = await this.canvasRepository.findOne({
+      where: { id },
+    });
+
+    if (!canvas) throw new NotFoundException();
+
+    await this.canvasRepository.update({ id: canvas.id }, { deleted: true });
   }
 
   public async readById(id: Uuid): Promise<CanvasEntity> {
     return this.canvasRepository.findOne({
       where: {
         id,
+        deleted: false,
       },
       relations: {
         tags: true,
@@ -153,6 +160,7 @@ export class CanvasService {
     return PageableUtils.producePagedResult(
       canvasFilter,
       await queryBuilder
+        .where('canvas.deleted = false')
         .leftJoinAndSelect('canvas.tags', 'tags')
         .getManyAndCount(),
     );
@@ -185,6 +193,14 @@ export class CanvasService {
     canvasId: Uuid,
     filter: CanvasStateFilter,
   ): Promise<CanvasStateEntity> {
+    const canvas = await this.canvasRepository.findOne({
+      where: {
+        id: canvasId,
+      },
+    });
+
+    if (canvas.deleted) throw new NotFoundException();
+
     const queryBuilder = this.canvasStateRepository
       .createQueryBuilder()
       .addOrderBy('"dateCreated"', 'DESC');
@@ -343,6 +359,9 @@ export class CanvasService {
         where: {
           user: {
             id: userId,
+          },
+          canvas: {
+            deleted: false,
           },
         },
       })
