@@ -228,6 +228,12 @@ export class CanvasController {
     return await this.canvasService.readById(uuid);
   }
 
+  @Delete('/:id')
+  @UseGuards(CanvasGuard)
+  public async deleteById(@Param('id', UuidPipe) uuid: Uuid) {
+    return await this.canvasService.deleteCanvasById(uuid);
+  }
+
   /**
    * Retrieves all items from the database based on the provided filter.
    *
