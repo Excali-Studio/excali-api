@@ -197,10 +197,11 @@ export class CanvasService {
     const canvas = await this.canvasRepository.findOne({
       where: {
         id: canvasId,
+        deleted: false,
       },
     });
 
-    if (canvas.deleted) throw new NotFoundException();
+    if (!canvas) throw new NotFoundException();
 
     const queryBuilder = this.canvasStateRepository
       .createQueryBuilder()
