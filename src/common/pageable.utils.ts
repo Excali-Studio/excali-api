@@ -1,6 +1,7 @@
 import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { SelectQueryBuilder } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
 
 export enum SortOrder {
   ASC = 'ASC',
@@ -8,19 +9,23 @@ export enum SortOrder {
 }
 
 export class ListFilter {
+  @ApiProperty({ required: false, default: 1 })
   @Transform(({ value }) => Math.max(Number(value), 1))
   @IsNumber()
   @IsOptional()
-  public page = 1;
+  public page?: number = 1;
 
+  @ApiProperty({ required: false, default: 10 })
   @Transform(({ value }) => Math.max(Number(value), 1))
   @IsNumber()
   @IsOptional()
-  public pageSize = 10;
+  public pageSize?: number = 10;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   public orderBy?: string;
 
+  @ApiProperty({ required: false })
   @IsEnum(SortOrder)
   @IsOptional()
   public sortOrder?: SortOrder = SortOrder.DESC;
@@ -33,6 +38,23 @@ export interface PagedResult<T> {
     pageSize: number;
     pageNumber: number;
   };
+  data: T[];
+}
+
+export class PageMetaDto {
+  @ApiProperty()
+  readonly totalItems: number;
+  @ApiProperty()
+  readonly totalPages: number;
+  @ApiProperty()
+  readonly pageSize: number;
+  @ApiProperty()
+  readonly pageNumber: number;
+}
+export class PagedResultDto<T> implements PagedResult<T> {
+  @ApiProperty({ type: () => PageMetaDto })
+  page: PageMetaDto;
+  @ApiProperty({ isArray: true })
   data: T[];
 }
 

@@ -24,7 +24,11 @@ import {
   CanvasFilter,
 } from './canvas.interface';
 import { Uuid } from '../common/common.interface';
-import { ListFilter, PagedResult } from '../common/pageable.utils';
+import {
+  ListFilter,
+  PagedResult,
+  PagedResultDto,
+} from '../common/pageable.utils';
 import { AuthenticatedGuard } from '../auth/guard/authenticated.guard';
 import { CanvasGuard } from './guard/canvas.guard';
 import { Log } from '@algoan/nestjs-logging-interceptor';
@@ -32,7 +36,15 @@ import { Request } from 'express';
 import { CanvasPublicGuard } from './guard/canvas.public.guard';
 import { CanvasStateEntity } from './entity/canvas-state.entity';
 import { UuidPipe } from '../common/uuid.pipe';
+import {
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ApiPaginatedResponse } from '../helpers/swagger';
 
+@ApiTags('canvas')
 @Controller('/canvas')
 export class CanvasController {
   constructor(private readonly canvasService: CanvasService) {}
@@ -63,6 +75,10 @@ export class CanvasController {
    */
   @Post()
   @UseGuards(AuthenticatedGuard)
+  @ApiCreatedResponse({
+    description: 'The record has been successfully created.',
+    type: CanvasDTO,
+  })
   public async createNewCanvas(
     @Body() createDto: CanvasCreateDTO,
     @Req() req: Request,
@@ -104,6 +120,10 @@ export class CanvasController {
    */
   @Patch('/:id')
   @UseGuards(AuthenticatedGuard, CanvasGuard)
+  @ApiOkResponse({
+    description: 'The record has been successfully updated.',
+    type: CanvasDTO,
+  })
   public async updateCanvasMetadata(
     @Param('id', UuidPipe) id: Uuid,
     @Body() updateDto: CanvasMetadataUpdateDTO,
@@ -159,6 +179,10 @@ export class CanvasController {
    */
   @Post('/:id/state')
   @UseGuards(AuthenticatedGuard, CanvasGuard)
+  @ApiCreatedResponse({
+    description: 'The record has been successfully updated.',
+    type: CanvasDTO,
+  })
   public async appendCanvasState(
     @Param('id', UuidPipe) id: Uuid,
     @Body() appendStateDto: CanvasContentUpdateDTO,
@@ -184,6 +208,9 @@ export class CanvasController {
   })
   @Get('/:id/state')
   @UseGuards(CanvasPublicGuard)
+  @ApiOkResponse({
+    type: CanvasStateEntity,
+  })
   public async readState(
     @Param('id', UuidPipe) id: Uuid,
     @Query() filter: CanvasStateFilter,
@@ -198,6 +225,7 @@ export class CanvasController {
    */
   @Get('/:id/state-change')
   @UseGuards(CanvasPublicGuard)
+  @ApiPaginatedResponse(CanvasStateEntity)
   public async readStateChanges(
     @Param('id', UuidPipe) id: Uuid,
     @Query() filter: ListFilter,
@@ -224,6 +252,9 @@ export class CanvasController {
    */
   @Get('/:id')
   @UseGuards(CanvasPublicGuard)
+  @ApiOkResponse({
+    type: CanvasDTO,
+  })
   public async readById(@Param('id', UuidPipe) uuid: Uuid): Promise<CanvasDTO> {
     return await this.canvasService.readById(uuid);
   }
@@ -268,6 +299,7 @@ export class CanvasController {
    */
   @Get('/')
   @UseGuards(AuthenticatedGuard)
+  @ApiPaginatedResponse(CanvasDTO)
   public async readAll(
     @Query() canvasFilter: CanvasFilter,
     @Req() req: Request,
@@ -282,6 +314,7 @@ export class CanvasController {
    */
   @Post('/:id/access')
   @UseGuards(AuthenticatedGuard, CanvasGuard)
+  @ApiNoContentResponse()
   public async giveAccess(
     @Param('id', UuidPipe) canvasId: Uuid,
     @Body() dto: CanvasAccessDTO,
@@ -297,6 +330,7 @@ export class CanvasController {
    */
   @Delete('/:id/access')
   @UseGuards(AuthenticatedGuard, CanvasGuard)
+  @ApiNoContentResponse()
   public async cancelAccess(
     @Param('id', UuidPipe) canvasId: Uuid,
     @Body() dto: CanvasAccessDTO,
@@ -316,6 +350,7 @@ export class CanvasController {
    */
   @Post('/access')
   @UseGuards(AuthenticatedGuard)
+  @ApiNoContentResponse()
   public async giveAccessByTag(
     @Body() dto: GiveCanvasAccessByTagDTO,
     @Req() req: Request,
@@ -333,6 +368,7 @@ export class CanvasController {
    */
   @Delete('/access')
   @UseGuards(AuthenticatedGuard)
+  @ApiNoContentResponse()
   public async cancelAccessByTag(
     @Body() dto: CancelCanvasAccessByTagDTO,
     @Req() req: Request,
@@ -350,6 +386,7 @@ export class CanvasController {
    */
   @Post('/:id/tags')
   @UseGuards(AuthenticatedGuard, CanvasGuard)
+  @ApiNoContentResponse()
   public async addTags(
     @Param('id', UuidPipe) canvasId: Uuid,
     @Body() dto: CanvasModifyTagDTO,
@@ -365,6 +402,7 @@ export class CanvasController {
    */
   @Delete('/:id/tags')
   @UseGuards(AuthenticatedGuard, CanvasGuard)
+  @ApiNoContentResponse()
   public async removeTags(
     @Param('id', UuidPipe) canvasId: Uuid,
     @Body() dto: CanvasModifyTagDTO,
