@@ -1,33 +1,57 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://github.com/Excali-Studio/excali-api/assets/8248700/e4b10290-3d53-4a14-995c-8f196e1643fc" width="200" alt="Nest Logo" /></a>
-</p>
+![Excalistudio](docs_static/excali_logo.png)
+# Excalistudio - Api service
 
 ## Description
+Excalistudio Backend Service is a custom backend solution for the open-source [Excalidraw editor](https://www.npmjs.com/package/@excalidraw/excalidraw). We have also developed a [frontend wrapper](https://github.com/Excali-Studio/excali-front-wrapper), which is available here. If you think our project is worth noting, please consider leaving a star or contributing to its development.
 
-ExcaliStudio Back-End repository
-
-## Installation
+### How to start local environment?
 
 ```bash
+# 1. Clone repository
+$ git clone https://github.com/Excali-Studio/excali-front-wrapper
+
+# 2. Install dependencies
 $ pnpm install
+
+# 3. Create and configure .env file 
+
+# 4. Seed database (at your own, read below)
 ```
 
-## Running the app
+__If you want to run full application, check last section!__
 
+___IMPORTANT!___: One of the most important settings is `AUTH_EMAIL_DOMAIN_WHITELIST`. You need to configure it for your domain. Also, don’t forget to provide your database credentials.
+
+_Default DB config:_
+* DB type: `postgres`
+* host: `localhost`
+* name: `excali_studio`
+* username: `excali_studio`
+* password: `excali_studio`
+
+### Seed database
+
+Here’s a revised version of your text for better clarity and grammar:
+
+We handle certain cases using roles and tags; however, you need to set these up manually. Currently, there is no script for this, so you’ll need to insert them using a database viewer or console.
+
+__Roles__: `ADMIN`, `USER`
+
+__Tags__: `SHARED`
+
+### Build-in commands
 ```bash
-# development
+# For development
 $ pnpm run start
 
-# watch mode
+# For local development, watch mode
 $ pnpm run start:dev
 
-# production mode
+# For production
 $ pnpm run start:prod
-```
 
-## Test
+### TESTS
 
-```bash
 # unit tests
 $ pnpm run test
 
@@ -38,25 +62,23 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
-## Auth flow
-
-1. http://localhost:3000/api/auth/google/login
-2. http://localhost:3000/api/auth/status
-3. http://localhost:3000/api/user/me
-
-
-## Swagger docs
-
-Docs available at: http://localhost:3000/api
+### Auth in application
+Our authentication is based on Passport.js. Currently, we have configured Google authentication, but feel free to add other providers and contribute.
+1. `/api/auth/google/login` - redirects to google auth
+2. `/api/auth/status` - returns auth status
+3. `/api/user/me` - returns session data
 
 
-![Entities](docs_static/db_entities.png)
+### Swagger docs
+We also provide Swagger documentation to make integration with your project easier.
+Available at: `/api`
 
+### Core database schema
+![Excalistudio](docs_static/core_database_scheme.png)
 
-### Default DB config
-* DB type: `postgres`
-* host: `localhost`
-* name: `excali_studio`
-* username: `excali_studio`
-* password: `excali_studio`
+### Learn more
+If you want setup full application, check out
+- [frontend editor wrapper](https://github.com/Excali-Studio/excali-front-wrapper) for ready to use frontend
+- [excali room](https://github.com/Excali-Studio/excalidraw-room) for live collaboration feature
 
+All three applications are needed for excalistudio to work properly
