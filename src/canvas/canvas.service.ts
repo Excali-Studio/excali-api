@@ -136,7 +136,7 @@ export class CanvasService {
     );
 
     queryBuilder
-      .innerJoin('canvas.canvasAccesses', 'access')
+      .innerJoinAndSelect('canvas.canvasAccesses', 'access')
       .where('access.userId = :userId', { userId: userId });
 
     canvasFilter.tagIds.forEach((tagId, index) => {
@@ -161,7 +161,7 @@ export class CanvasService {
     return PageableUtils.producePagedResult(
       canvasFilter,
       await queryBuilder
-        .where('canvas.deleted = false')
+        .andWhere('canvas.deleted = false')
         .leftJoinAndSelect('canvas.tags', 'tags')
         .getManyAndCount(),
     );
