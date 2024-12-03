@@ -1,4 +1,5 @@
-![Excalistudio](docs_static/excali_logo.png)
+<img src="docs_static/excali_logo.png" alt="drawing" width="300"/>
+
 # Excalistudio - Api service
 
 ## Description
