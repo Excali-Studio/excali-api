@@ -201,7 +201,7 @@ export class CanvasService {
       },
     });
 
-    if (!canvas) throw new NotFoundException();
+    if (canvas.deleted) throw new NotFoundException();
 
     const queryBuilder = this.canvasStateRepository
       .createQueryBuilder()
