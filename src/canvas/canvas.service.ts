@@ -136,7 +136,7 @@ export class CanvasService {
     );
 
     queryBuilder
-      .innerJoinAndSelect('canvas.canvasAccesses', 'access')
+      .innerJoin('canvas.canvasAccesses', 'access')
       .where('access.userId = :userId', { userId: userId });
 
     canvasFilter.tagIds.forEach((tagId, index) => {
