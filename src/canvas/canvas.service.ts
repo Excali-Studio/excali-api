@@ -123,6 +123,9 @@ export class CanvasService {
       },
       relations: {
         tags: true,
+        canvasAccesses: {
+          user: true,
+        },
       },
     });
   }
