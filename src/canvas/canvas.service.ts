@@ -25,6 +25,7 @@ import {
 import { CanvasAccessEntity } from './entity/canvas-access.entity';
 import { UserEntity } from '../user/entity/user.entity';
 import { CanvasTagEntity } from './entity/canvas-tag.entity';
+import { canvasEntityMapper } from './canvas.utils';
 
 @Injectable()
 export class CanvasService {
@@ -137,7 +138,9 @@ export class CanvasService {
 
     queryBuilder
       .innerJoinAndSelect('canvas.canvasAccesses', 'access')
-      .where('access.userId = :userId', { userId: userId });
+      .where('access.userId = :userId', { userId: userId })
+      .leftJoinAndSelect('canvas.canvasAccesses', 'owner')
+      .innerJoinAndSelect('owner.user', 'ownerUser');
 
     canvasFilter.tagIds.forEach((tagId, index) => {
       queryBuilder
@@ -158,13 +161,14 @@ export class CanvasService {
       );
     }
 
-    return PageableUtils.producePagedResult(
-      canvasFilter,
-      await queryBuilder
-        .andWhere('canvas.deleted = false')
-        .leftJoinAndSelect('canvas.tags', 'tags')
-        .getManyAndCount(),
-    );
+    const [data, count] = await queryBuilder
+      .andWhere('canvas.deleted = false')
+      .leftJoinAndSelect('canvas.tags', 'tags')
+      .getManyAndCount();
+
+    const mappedData = canvasEntityMapper(data, userId);
+
+    return PageableUtils.producePagedResult(canvasFilter, [mappedData, count]);
   }
 
   public async readByTags(
